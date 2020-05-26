@@ -4,6 +4,7 @@
 import copy
 import random
 import math
+from config import Config
 
 actions = [0, 1, 2, 3]
 
@@ -32,18 +33,18 @@ class TreeNode:
 
 
 class MCTS:
-    def __init__(self, state, depth=5, c=100, rollout_limit=10, gamma=0.9, simulate_depth=5):
+    def __init__(self, state, config: Config):
         self.state = state
-        self.depth = depth
-        self.c = c
-        self.gamma = gamma
-        self.simulate_depth = simulate_depth
+        self.iterations = config.iterations
+        self.c = config.c
+        self.gamma = config.gamma
+        self.simulate_depth = config.simulation_depth
         self.root = TreeNode(state, r=0, N=1, Q=0, parent=None)
-        self.rollout_limit = rollout_limit
+        self.rollout_limit = config.rollout_depth
 
     def select_action(self):
-        for i in range(self.depth):
-            self.simulate(self.root, self.depth)
+        for i in range(self.iterations):
+            self.simulate(self.root, self.iterations)
 
         max_q = 0
         best_action = 0

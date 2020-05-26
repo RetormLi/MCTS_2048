@@ -10,6 +10,9 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 from mcts import MCTS
+from config import Config
+
+config = Config()
 
 
 class Game2048Env(gym.Env):
@@ -352,11 +355,12 @@ if __name__ == '__main__':
         # A random agent as example
         # 0, 1, 2, 3 mean up, down, left, right respectively
         simu_env = copy.deepcopy(env)
-        agent = MCTS(simu_env)
+        agent = MCTS(simu_env, config)
         action = agent.select_action()
-        time.sleep(0.2)
+        # action = random.choice([0,1,2,3])
+        # time.sleep(0.1)
         obs, rew, done, info = env.step(action)
-        print(action, rew, done, info)
+        print(action, rew, done, info, env.score)
     # remember to close the env, but you can always let resources leak on your own computer :|
     env.close()
     test_env.setRender(False)
