@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import (
     QMainWindow, QApplication, QDesktopWidget, QLabel, QMessageBox)
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
+from mcts import MCTS
 
 
 class Game2048Env(gym.Env):
@@ -350,7 +351,9 @@ if __name__ == '__main__':
     while not done:
         # A random agent as example
         # 0, 1, 2, 3 mean up, down, left, right respectively
-        action = random.randint(0, 3)
+        simu_env = copy.deepcopy(env)
+        agent = MCTS(simu_env)
+        action = agent.selectAction()
         time.sleep(0.2)
         obs, rew, done, info = env.step(action)
         print(rew, done, info)
