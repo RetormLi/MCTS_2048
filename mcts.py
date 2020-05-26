@@ -8,9 +8,8 @@ import math
 actions = [0, 1, 2, 3]
 
 
-class TreeNode():
+class TreeNode:
     def __init__(self, state, r, N, Q, parent):
-        super().__init__()
         self.state = state
         self.N = N
         self.Q = Q
@@ -20,16 +19,19 @@ class TreeNode():
 
     def expand(self):
         for action in actions:
-            new_state = copy.deepcopy(self.state)
-            r = new_state.step(action)[1]
+            # self.N += 1
             self.children[action] = TreeNode(
-                new_state, r, N=1, Q=0, parent=self)
+                None, r=0, N=1, Q=0, parent=self)
+
+    def set_node(self, state, r):
+        self.state = state
+        self.r = r
 
     def is_leaf(self):
-        return (self.children == dict())
+        return self.children == dict()
 
 
-class MCTS():
+class MCTS:
     def __init__(self, state, depth=5, c=100, rollout_limit=10, gamma=0.9, simulate_depth=5):
         self.state = state
         self.depth = depth
@@ -39,7 +41,7 @@ class MCTS():
         self.root = TreeNode(state, r=0, N=1, Q=0, parent=None)
         self.rollout_limit = rollout_limit
 
-    def selectAction(self):
+    def select_action(self):
         for i in range(self.depth):
             self.simulate(self.root, self.depth)
 
@@ -54,20 +56,27 @@ class MCTS():
         return best_action
 
     def simulate(self, node, d):
-        '''
+        """
         Simulation step for MCTS
-        '''
+        """
         if d == 0:
-            node.Q = 0
+            return 0
         if node.is_leaf():
             node.expand()
-            node.Q = self.rollout(node.state, self.rollout_limit)
+            return self.rollout(node.state, self.rollout_limit)
         action = self.selection(node)
+
+        new_state = copy.deepcopy(self.state)
+        reward = new_state.step(action)[1]
         new_node = node.children[action]
-        q = new_node.r + self.gamma * self.simulate(new_node, d-1)
+        new_node.set_node(new_state, reward)
+
+        q = reward + self.gamma * self.simulate(new_node, d - 1)
         new_node.N += 1
+        node.N += 1
         new_node.Q += (q - new_node.Q) / new_node.N
-        node.Q = q
+
+        return q
 
     def selection(self, node):
         max_q = 0
@@ -75,7 +84,7 @@ class MCTS():
         for action in actions:
             new_node = node.children[action]
             value = new_node.Q + self.c * \
-                math.sqrt(math.log(node.N) / new_node.N)
+                    math.sqrt(math.log(node.N) / new_node.N)
             if value > max_q:
                 max_q = value
                 best_action = action

@@ -353,10 +353,10 @@ if __name__ == '__main__':
         # 0, 1, 2, 3 mean up, down, left, right respectively
         simu_env = copy.deepcopy(env)
         agent = MCTS(simu_env)
-        action = agent.selectAction()
+        action = agent.select_action()
         time.sleep(0.2)
         obs, rew, done, info = env.step(action)
-        print(rew, done, info)
+        print(action, rew, done, info)
     # remember to close the env, but you can always let resources leak on your own computer :|
     env.close()
     test_env.setRender(False)
