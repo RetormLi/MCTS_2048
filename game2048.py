@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (
     QMainWindow, QApplication, QDesktopWidget, QLabel, QMessageBox)
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
-from mcts import MCTS
+import mcts
 from config import Config
 
 config = Config()
@@ -355,12 +355,12 @@ if __name__ == '__main__':
         # A random agent as example
         # 0, 1, 2, 3 mean up, down, left, right respectively
         simu_env = copy.deepcopy(env)
-        agent = MCTS(simu_env, config)
+        agent = mcts.MCTS(simu_env, config)
         action = agent.select_action()
         # action = random.choice([0,1,2,3])
         # time.sleep(0.1)
         obs, rew, done, info = env.step(action)
-        print(action, rew, done, info, env.score)
+        print(action, rew, env.score)
     # remember to close the env, but you can always let resources leak on your own computer :|
     env.close()
     test_env.setRender(False)
