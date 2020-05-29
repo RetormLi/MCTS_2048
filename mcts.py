@@ -81,7 +81,8 @@ class MCTS:
         # when this state does't belongs to the MCT
         if node.is_leaf():
             node.expand()
-            return self.rollout(node.state, self.rollout_limit)
+            new_state = copy.deepcopy(node.state)
+            return self.rollout(new_state, self.rollout_limit)
 
         # selection
         action = self.selection(node)
