@@ -3,6 +3,7 @@
 
 import copy
 import math
+import random
 from config import Config
 import game2048
 
@@ -114,7 +115,9 @@ class MCTS:
             node.N += node.children[action].N
 
         # choose action using UCT
-        for action in actions:
+        shuffled_actions = actions[:]
+        random.shuffle(shuffled_actions)
+        for action in shuffled_actions:
             new_node = node.children[action]
             value = new_node.Q + self.c * math.sqrt(math.log(node.N) / new_node.N)
             if value > max_q:

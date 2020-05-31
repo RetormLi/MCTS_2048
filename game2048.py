@@ -345,7 +345,7 @@ if __name__ == '__main__':
     env = Game2048Env(True)
     # you can fix the seed for debugging, but your agent SHOULD NOT overfit to the env of a certain seed
     seed = random.randint(0, 100)
-    env.seed(72)
+    env.seed(seed)
     # render is automatically set to False for copied envs
     # test_env = copy.deepcopy(env)
     # test_env.setRender(False)
