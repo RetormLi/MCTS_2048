@@ -10,12 +10,7 @@ actions = [0, 1, 2, 3]
 
 
 class TreeNode:
-    def __init__(self,
-                 state,
-                 r: float,
-                 N: int,
-                 Q: float,
-                 parent):
+    def __init__(self, state, r: float, N: int, Q: float, parent):
         self.state = state
         self.N = N
         self.Q = Q
@@ -59,7 +54,7 @@ class MCTS:
         """
         # simulation loop
         for i in range(self.iterations):
-            self.simulate(self.root, self.iterations)
+            self.__simulate(self.root, self.iterations)
 
         # action choice
         max_q = 0
@@ -72,7 +67,7 @@ class MCTS:
                 best_action = action
         return best_action
 
-    def simulate(self, node: TreeNode, d: int) -> float:
+    def __simulate(self, node: TreeNode, d: int) -> float:
         """
         Simulation step for MCTS.
 
@@ -88,22 +83,22 @@ class MCTS:
         if node.is_leaf():
             node.expand()
             new_state = copy.deepcopy(node.state)
-            return self.rollout(new_state, self.rollout_limit)
+            return self.__rollout(new_state, self.rollout_limit)
 
         # selection
-        action = self.selection(node)
+        action = self.__selection(node)
         new_state = copy.deepcopy(self.state)
         reward = new_state.step(action)[1]
         new_node = node.children[action]
         new_node.set_node(new_state, reward)
 
-        q = reward + self.gamma * self.simulate(new_node, d - 1)
+        q = reward + self.gamma * self.__simulate(new_node, d - 1)
         new_node.N += 1
         new_node.Q += (q - new_node.Q) / new_node.N
 
         return q
 
-    def selection(self, node: TreeNode) -> int:
+    def __selection(self, node: TreeNode) -> int:
         """
         Select the best action with UCT.
 
@@ -127,7 +122,7 @@ class MCTS:
                 best_action = action
         return best_action
 
-    def rollout(self, env: game2048.Game2048Env, limit: int) -> float:
+    def __rollout(self, env: game2048.Game2048Env, limit: int) -> float:
         """
         Rollout policy.
 
@@ -139,4 +134,4 @@ class MCTS:
             return 0
         action = self.rollout_policy(actions)
         reward = env.step(action)[1]
-        return reward + self.gamma * self.rollout(env, limit - 1)
+        return reward + self.gamma * self.__rollout(env, limit - 1)

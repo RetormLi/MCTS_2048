@@ -359,7 +359,7 @@ if __name__ == '__main__':
         agent = mcts.MCTS(simu_env, config)
         action = agent.select_action()
         # action = random.choice([0,1,2,3])
-        # time.sleep(0.1)
+        time.sleep(0.5)
         obs, rew, done, info = env.step(action)
         print(action, rew, env.score)
     # remember to close the env, but you can always let resources leak on your own computer :|
