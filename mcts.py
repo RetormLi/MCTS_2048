@@ -10,7 +10,12 @@ actions = [0, 1, 2, 3]
 
 
 class TreeNode:
-    def __init__(self, state, r, N, Q, parent):
+    def __init__(self,
+                 state,
+                 r: float,
+                 N: int,
+                 Q: float,
+                 parent):
         self.state = state
         self.N = N
         self.Q = Q
@@ -35,6 +40,7 @@ class MCTS:
     """
     The complementation of MCTS.
     """
+
     def __init__(self, state: game2048.Game2048Env, config: Config):
         self.state = state
         self.iterations = config.iterations
@@ -106,9 +112,9 @@ class MCTS:
         """
         max_q = 0
         best_action = 0
-        node.N = 0
 
         # update the value of N(s)
+        node.N = 0
         for action in actions:
             node.N += node.children[action].N
 

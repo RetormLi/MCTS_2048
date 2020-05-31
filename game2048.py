@@ -197,7 +197,7 @@ class Game2048Env(gym.Env):
     def _checkBoard(self):
         for i in range(4):
             for j in range(4):
-                if self.state[i][j] == 2048:
+                if self.state[i][j] == 4096:
                     self.done = True
                     self.info['episode_length'] = self.episode_length
                     self.info['success'] = True
@@ -344,7 +344,8 @@ class Game2048GUI(QMainWindow):
 if __name__ == '__main__':
     env = Game2048Env(True)
     # you can fix the seed for debugging, but your agent SHOULD NOT overfit to the env of a certain seed
-    env.seed(1)
+    seed = random.randint(0, 100)
+    env.seed(72)
     # render is automatically set to False for copied envs
     # test_env = copy.deepcopy(env)
     # test_env.setRender(False)
@@ -362,6 +363,7 @@ if __name__ == '__main__':
         obs, rew, done, info = env.step(action)
         print(action, rew, env.score)
     # remember to close the env, but you can always let resources leak on your own computer :|
+    print(seed)
     env.close()
     # test_env.setRender(False)
     # test_env.close()
